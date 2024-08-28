@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeLeaf.org" th:replace="~{base :: Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Products page</title>
+</head>
+<body>
+
+<section class="py-10">
+    <div class="container mx-auto px-4">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="bg-blue-600 text-white text-center py-4">
+                <p class="text-xl font-bold">View Product</p>
+                <div th:if="${session.succMsg}" class="mb-4">
+                    <h2 class="text-green-900 font-semibold">[[${session.succMsg}]]</h2>
+                    <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                </div>
+                <div th:if="${session.errorMsg}" class="mb-4">
+                    <h2 class="text-red-600 font-semibold">[[${session.errorMsg}]]</h2>
+                    <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                </div>
+
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white text-sm">
+                        <thead class="bg-gray-200 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="py-3 px-4 text-left">Sl No</th>
+                            <th class="py-3 px-4 text-left">Image</th>
+                            <th class="py-3 px-4 text-left">Title</th>
+                            <th class="py-3 px-4 text-left">Category</th>
+                            <th class="py-3 px-4 text-left">Price</th>
+                            <th class="py-3 px-4 text-left">Discount</th>
+                            <th class="py-3 px-4 text-left">Discount price</th>
+                            <th class="py-3 px-4 text-left">Status</th>
+                            <th class="py-3 px-4 text-left w-1/6">Description</th>
+                            <th class="py-3 px-4 text-left">Stock</th>
+                            <th class="py-3 px-4 text-center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                        <tr th:each="p,c:${products}" class="border-b">
+                            <td class="py-3 px-4">[[${c.count}]]</td>
+                            <td class="py-3 px-4">
+                                <img th:src="@{'/img/product/' + ${p.image}}" class="w-12 h-16 object-cover rounded-lg shadow-md">
+                            </td>
+                            <td class="py-3 px-4">[[${p.title}]]</td>
+                            <td class="py-3 px-4">[[${p.category}]]</td>
+                            <td class="py-3 px-4">₹[[${p.price}]]</td>
+                            <td class="py-3 px-4">[[${p.discount}]]%</td>
+                            <td class="py-3 px-4">₹[[${p.discountPrice}]]</td>
+                            <td class="py-3 px-4">[[${p.isActive}]]</td>
+                            <td class="py-3 px-4 max-w-xs break-words">[[${p.description}]]</td>
+                            <td class="py-3 px-4">[[${p.stock}]]</td>
+                            <td class="py-3 px-4 text-center">
+                                <a th:href="@{'/admin/editProduct/' + ${p.id}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-300 inline-flex items-center">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span class="ml-1">Edit</span>
+                                </a>
+                                <a th:href="@{'/admin/deleteProduct/'+${p.id}}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-300 inline-flex items-center ml-2">
+                                    <i class="fa-solid fa-trash"></i>
+                                    <span class="ml-1">Delete</span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+</body>
+</html>

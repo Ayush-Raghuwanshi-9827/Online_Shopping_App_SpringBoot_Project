@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org" th:replace="~{base :: Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section>
+    <div class="container mx-auto my-16 px-20 lg:px-20">
+        <div class="bg-white shadow-lg rounded-lg p-10">
+            <div class="flex flex-col lg:flex-row items-center gap-10">
+                <!-- Product Image -->
+                <div class="lg:w-1/2 justify-center text-center lg:text-left pl-8">
+                    <img src="img/product/laptop-1.jpeg" alt="Laptop" class="rounded-md object-cover">
+                </div>
+
+                <!-- Product Details -->
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl font-semibold mb-4">Laptop</h2>
+                    <p class="text-lg mb-3"><span class="font-bold">Description:</span> <br> Hp Laptop, 256GB SSD</p>
+                    <p class="text-lg mb-5"><span class="font-bold">Product Details:</span><br>
+                        Status:
+                        <span class="text-green-600 font-semibold">Available</span>
+                        <span class="text-yellow-600 font-semibold">Out of stock</span><br>
+                        Category: Laptop<br>
+                        Policy: 7 days Replacement & Return
+                    </p>
+                    <p class="text-2xl font-bold mb-6">
+                        Price: ₹70,000
+                        <span class="line-through text-gray-500 text-lg">₹50,000</span>
+                        <span class="text-green-600 text-lg">50% off</span>
+                    </p>
+
+                    <!-- Features Row -->
+                    <div class="flex justify-between mb-8 text-red-600">
+                        <div class="text-center">
+                            <i class="fas fa-money-bill-wave fa-2x"></i>
+                            <p class="mt-2 text-sm font-medium">Cash On Delivery</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-undo-alt fa-2x"></i>
+                            <p class="mt-2 text-sm font-medium">Return Available</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-truck-moving fa-2x"></i>
+                            <p class="mt-2 text-sm font-medium">Free Shipping</p>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <a href="Login.jsp" class="block text-center bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition duration-300">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

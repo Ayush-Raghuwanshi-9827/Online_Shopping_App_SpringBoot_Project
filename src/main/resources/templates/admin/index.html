@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org" th:replace="~{base :: Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section>
+   <div class="container mt-5 p-5">
+       <div class="container mx-auto mr-20 ml-20 mt-10 mb-10">
+           <p class="text-center text-3xl font-bold text-gray-800 mb-8">Admin Dashboard</p>
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+               <div>
+                   <a href="/admin/loadAddProduct" class="no-underline">
+                       <div class="bg-blue-100 hover:bg-blue-200 transition-all duration-300 rounded-lg shadow-lg p-6 text-center">
+                           <div class="text-blue-600">
+                               <i class="fa-solid fa-square-plus fa-3x mb-3"></i>
+                               <h4 class="text-xl font-semibold">Add Product</h4>
+                           </div>
+                       </div>
+                   </a>
+               </div>
+
+               <div>
+                   <a href="/admin/category" class="no-underline">
+                       <div class="bg-yellow-100 hover:bg-yellow-200 transition-all duration-300 rounded-lg shadow-lg p-6 text-center">
+                           <div class="text-yellow-600">
+                               <i class="fa-solid fa-list fa-3x mb-3"></i>
+                               <h4 class="text-xl font-semibold">Add Category</h4>
+                           </div>
+                       </div>
+                   </a>
+               </div>
+
+               <div>
+                   <a href="/admin/products" class="no-underline">
+                       <div class="bg-green-100 hover:bg-green-200 transition-all duration-300 rounded-lg shadow-lg p-6 text-center">
+                           <div class="text-green-600">
+                               <i class="fa-solid fa-table-list fa-3x mb-3"></i>
+                               <h4 class="text-xl font-semibold">View Product</h4>
+                           </div>
+                       </div>
+                   </a>
+               </div>
+
+               <div>
+                   <a href="#" class="no-underline">
+                       <div class="bg-yellow-100 hover:bg-yellow-200 transition-all duration-300 rounded-lg shadow-lg p-6 text-center">
+                           <div class="text-yellow-600">
+                               <i class="fa-solid fa-box-open fa-3x mb-3"></i>
+                               <h4 class="text-xl font-semibold">Order</h4>
+                           </div>
+                       </div>
+                   </a>
+               </div>
+
+               <div>
+                   <a href="#" class="no-underline">
+                       <div class="bg-blue-100 hover:bg-blue-200 transition-all duration-300 rounded-lg shadow-lg p-6 text-center">
+                           <div class="text-blue-600">
+                               <i class="fa-solid fa-circle-user fa-3x mb-3"></i>
+                               <h4 class="text-xl font-semibold">User</h4>
+                           </div>
+                       </div>
+                   </a>
+               </div>
+
+               <div>
+                   <a href="#" class="no-underline">
+                       <div class="bg-purple-100 hover:bg-purple-200 transition-all duration-300 rounded-lg shadow-lg p-6 text-center">
+                           <div class="text-purple-600">
+                               <i class="fa-solid fa-user-plus fa-3x mb-3"></i>
+                               <h4 class="text-xl font-semibold">Add Admin</h4>
+                           </div>
+                       </div>
+                   </a>
+               </div>
+           </div>
+       </div>
+   </div>
+</section>
+</body>
+</html>

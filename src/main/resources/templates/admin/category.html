@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org" th:replace="~{base :: Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Category Page</title>
+</head>
+<body>
+<section class="py-8">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap -mx-4">
+            <!-- Add Category Form -->
+            <div class="w-full md:w-1/3 px-4 mb-8">
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="bg-blue-600 text-white text-center py-4">
+                        <p class="text-xl font-bold">Add Category</p>
+                    </div>
+                    <div class="p-6">
+                        <!-- Success and Error Messages -->
+                        <div th:if="${session.succMsg}" class="mb-4">
+                            <p class="text-green-600 font-semibold">[[${session.succMsg}]]</p>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+                        <div th:if="${session.errorMsg}" class="mb-4">
+                            <p class="text-red-600 font-semibold">[[${session.errorMsg}]]</p>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+
+                        <!-- Form -->
+                        <form action="/admin/saveCategory" method="post" enctype="multipart/form-data">
+                            <!-- Category Name Input -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Enter Category</label>
+                                <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" name="name" type="text">
+                            </div>
+
+                            <!-- Status Radio Buttons -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Status</label>
+                                <div class="flex items-center mb-2">
+                                    <input class="form-radio text-blue-600" type="radio" name="isActive" id="flexRadioDefault1" checked value="true">
+                                    <label class="ml-2 text-gray-700" for="flexRadioDefault1">Active</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input class="form-radio text-blue-600" type="radio" name="isActive" id="flexRadioDefault2" value="false">
+                                    <label class="ml-2 text-gray-700" for="flexRadioDefault2">Inactive</label>
+                                </div>
+                            </div>
+
+                            <!-- Image Upload Input -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Upload Image</label>
+                                <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" type="file" name="file">
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div>
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Details Table -->
+            <div class="w-full md:w-2/3 px-4">
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="bg-gray-800 text-white text-center py-4">
+                        <p class="text-xl font-bold">Category Details</p>
+                    </div>
+                    <div class="p-6">
+                        <table class="min-w-full bg-white">
+                            <thead>
+                            <tr class="text-left border-b-2">
+                                <th class="py-2 px-4">SL No</th>
+                                <th class="py-2 px-4">Category</th>
+                                <th class="py-2 px-4">Status</th>
+                                <th class="py-2 px-4">Image</th>
+                                <th class="py-2 px-4">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="cat, c:${categorys}" class="border-b hover:bg-gray-100">
+                                <td class="py-2 px-4">[[${c.count}]]</td>
+                                <td class="py-2 px-4">[[${cat.name}]]</td>
+                                <td class="py-2 px-4">
+                                    <span th:if="${cat.isActive}" class="text-green-600 font-semibold">Active</span>
+                                    <span th:if="${!cat.isActive}" class="text-red-600 font-semibold">Inactive</span>
+                                </td>
+                                <td class="py-2 px-4">
+                                    <img th:src="@{'/img/Category/'+${cat.imageName}}" class="w-12 h-12 object-cover rounded-full">
+                                </td>
+                                <td class="py-2 px-4 flex space-x-2">
+                                    <a th:href="@{'/admin/loadEditCategory/'+${cat.id}}" class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-300"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                                    <a th:href="@{'/admin/deleteCategory/'+${cat.id}}" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition duration-300"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org" th:replace="~{base :: Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product image</title>
+</head>
+<body>
+
+<section>
+    <div class="container mx-auto p-8">
+        <div class="flex justify-center">
+            <div class="w-full max-w-lg">
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                    <div class="bg-blue-600 text-white text-center py-4">
+                        <h2 class="text-2xl font-bold fs-4">Add Product</h2>
+                        <!-- Success and Error Messages -->
+                        <div th:if="${session.succMsg}" class="mb-4">
+                            <h2 class="text-green-900 font-semibold">[[${session.succMsg}]]</h2>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+                        <div th:if="${session.errorMsg}" class="mb-4">
+                            <h2 class="text-red-600 font-semibold">[[${session.errorMsg}]]</h2>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <form method="post" action="/admin/saveProduct" enctype="multipart/form-data">
+                            <!-- Title Field -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2">Enter Title</label>
+                                <input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2">Enter Description</label>
+                                <textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+
+                            <!-- Category Field -->
+                            <div class="mb-4">
+                                <label  class="block text-gray-700 font-semibold mb-2">Category</label>
+                                <select name="category" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>--select--</option>
+                                    <option th:each="c:${categories}">[[${c.name}]]</option>
+                                </select>
+                            </div>
+
+                            <!-- Price Field -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2">Enter Price</label>
+                                <input type="number" name="price" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <!-- isActive Radio -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Status</label>
+                                <div class="flex items-center mb-2">
+                                    <input class="form-radio text-blue-600" type="radio" name="isActive" id="flexRadioDefault1" checked value="true">
+                                    <label class="ml-2 text-gray-700" for="flexRadioDefault1">Active</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input class="form-radio text-blue-600" type="radio" name="isActive" id="flexRadioDefault2" value="false">
+                                    <label class="ml-2 text-gray-700" for="flexRadioDefault2">Inactive</label>
+                                </div>
+                            </div>
+
+                            <!-- Stock and Image Upload Fields -->
+                            <div class="flex justify-between mb-4">
+                                <div class="w-1/2 pr-2">
+                                    <label class="block text-gray-700 font-semibold mb-2">Enter Stock</label>
+                                    <input type="number" name="stock" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div class="w-1/2 pl-2">
+                                    <label class="block text-gray-700 font-semibold mb-2">Upload Image</label>
+                                    <input type="file" name="file" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>
