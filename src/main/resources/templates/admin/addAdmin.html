@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org" th:replace="~{base :: Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Forgot Password Page</title>
+</head>
+<body>
+<section>
+    <div class="container mt-5 p-5" >
+        <div class="row">
+            <div class="col-md-6 p-5">
+                <img th:src="@{/img/login/login-1.jpg}" width="100%" height="400px">
+            </div>
+
+            <div class="col-md-6 p-5">
+
+                <div class="card shadow p-3 mb-5 bg-body-tertiary rounded">
+                    <div class="card-header">
+                        <p class="fs-4 text-center">Add admin</p>
+
+
+                        <div th:if="${session.succMsg}" class="mb-2 ">
+                            <h2 class="text-green-900 font-semibold text-center">[[${session.succMsg}]]</h2>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+                        <div th:if="${session.errorMsg}" class="mb-2 ">
+                            <h2 class="text-red-600 font-semibold text-center">[[${session.errorMsg}]]</h2>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/addAdmin" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Email:</label>
+                                <input class="form-control" name="email" type="text" placeholder="Enter Your Registered Email">
+                            </div>
+
+                            <button type="submit" class="btn bg-primary text-white col-md-12">Add admin</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+</body>
+</html>

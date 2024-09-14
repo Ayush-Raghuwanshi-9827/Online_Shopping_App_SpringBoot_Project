@@ -74,7 +74,6 @@ public class ProductServiceImpl implements ProductService {
             if (!image.isEmpty()){
                 File saveFile = new ClassPathResource("static/img").getFile();
                 Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"product"+File.separator+image.getOriginalFilename());
-//                System.out.println(path);
                 Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             }
             return product;
@@ -86,12 +85,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAllIsActiveProduct(String category) {
        List<Product> productList = null;
-        if (ObjectUtils.isEmpty(category)){
-           productList = productRepository.findByIsActiveTrue();
-       }else {
+        if (ObjectUtils.isEmpty(category))
+            productList = productRepository.findByIsActiveTrue();
+       else
             productList = productRepository.findByCategory(category);
-        }
+
         return productList;
+    }
+
+    @Override
+    public List<Product> getSearchProduct(String ch) {
+        return productRepository.findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch,ch);
     }
 
 

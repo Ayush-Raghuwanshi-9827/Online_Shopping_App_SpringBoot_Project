@@ -2,26 +2,26 @@ package com.ecomerse.Online_Shopping_App.Controller;
 
 import com.ecomerse.Online_Shopping_App.model.Category;
 import com.ecomerse.Online_Shopping_App.model.Product;
-import com.ecomerse.Online_Shopping_App.repository.CategoryRepository;
-import com.ecomerse.Online_Shopping_App.repository.ProductRepository;
+import com.ecomerse.Online_Shopping_App.model.UserDetails;
+import com.ecomerse.Online_Shopping_App.service.CartService;
 import com.ecomerse.Online_Shopping_App.service.CategoryService;
 import com.ecomerse.Online_Shopping_App.service.ProductService;
+import com.ecomerse.Online_Shopping_App.service.UserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -33,6 +33,12 @@ public class AdminController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/")
     public String index(){
@@ -67,7 +73,6 @@ public class AdminController {
 
                 File saveFile = new ClassPathResource("static/img").getFile();
                 Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"Category"+File.separator+file.getOriginalFilename());
-                System.out.println(path);
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
                 session.setAttribute("succMsg", "Saved Successfully");
             }
@@ -109,7 +114,6 @@ public class AdminController {
             if (!file.isEmpty()){
                 File saveFile = new ClassPathResource("static/img").getFile();
                 Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"Category"+File.separator+file.getOriginalFilename());
-//                System.out.println(path);
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             }
             session.setAttribute("succMsg","Category update Successfully");
@@ -120,6 +124,19 @@ public class AdminController {
 
     }
 
+    @ModelAttribute
+    public void getUserDetails(Principal p, Model model){
+        if (p!=null){
+            var email = p.getName();
+            var userDtl = userDetailsService.getUserByEmail(email);
+            model.addAttribute("user", userDtl);
+            Integer cartCount=  cartService.getCountCart(userDtl.getId());
+            model.addAttribute("countCart", cartCount);
+
+        }
+        List<Category> categories = categoryService.getAllCategory();
+        model.addAttribute("categories", categories);
+    }
 
     @PostMapping("/saveProduct")
     public String saveProduct(@ModelAttribute Product product, HttpSession session, @RequestParam("file") MultipartFile image) throws IOException {
@@ -129,10 +146,8 @@ public class AdminController {
         product.setDiscountPrice(product.getPrice());
         Product saveProduct =  productService.saveProduct(product);
         if (!ObjectUtils.isEmpty(saveProduct)){
-
             File saveFile = new ClassPathResource("static/img").getFile();
             Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"product"+File.separator+image.getOriginalFilename());
-            System.out.println(path);
             Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             session.setAttribute("succMsg", "Product Saved Successfully");
         }else {
@@ -140,7 +155,6 @@ public class AdminController {
         }
         return "redirect:/admin/loadAddProduct";
     }
-
 
     @GetMapping("/products")
     public String loadViewProduct(Model model){
@@ -185,5 +199,22 @@ public class AdminController {
         return "redirect:/admin/editProduct/"+product.getId();
     }
 
+    @GetMapping("/addAdmin")
+    public String addAdmin(){
+        return "/admin/addAdmin";
+    }
+
+    @PostMapping("/addAdmin")
+    public String changeRoleToAdmin(@RequestParam String email, HttpSession session) {
+        UserDetails user = userDetailsService.getUserByEmail(email);
+        if (ObjectUtils.isEmpty(user)) {
+            session.setAttribute("errorMsg", "Invalid Email, Please enter the valid registered Email");
+        } else {
+            user.setRole("ROLE_ADMIN");
+            userDetailsService.updateUser(user);
+            session.setAttribute("succMsg", "New Admin created Successfully");
+        }
+        return "redirect:/admin/addAdmin";
+    }
 
 }

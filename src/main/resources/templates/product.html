@@ -14,11 +14,22 @@
                     <i class="fas fa-search"></i>
                 </div>
                 <!-- Search Input -->
-                <input type="text" placeholder="Search for products..." class="w-full px-4 py-2 rounded-l-full focus:outline-none">
-                <!-- Search Button -->
-                <button class="bg-indigo-500 text-white px-6 py-2 rounded-r-full hover:bg-indigo-600 focus:outline-none">
-                    Search
-                </button>
+                <form action="search" method="get" class="w-full flex">
+                    <!-- Search Input -->
+                    <input
+                            type="text"
+                            name="ch"
+                            placeholder="Search for products..."
+                            class="w-full px-4 py-2 rounded-l-full focus:outline-none">
+                    <!-- Search Button -->
+                    <button
+                            type="submit"
+                            class="bg-indigo-500 text-white px-6 py-2 rounded-r-full hover:bg-indigo-600 focus:outline-none">
+                        Search
+                    </button>
+                </form>
+
+
             </div>
         </div>
     </div>
@@ -54,11 +65,11 @@
                     <p class="text-3xl font-semibold text-center text-gray-800 mb-8">Shop by Category</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                         <!-- Product Card -->
+                        <th:block th:if="${products.size >0}">
                         <div class="bg-white shadow-lg rounded-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1" th:each="p:${products}">
                             <div class="p-4" >
                                 <img th:src="@{'/img/product/' + ${p.image}}" alt="Laptop" class="w-full h-48 object-cover rounded-md mb-4">
-                                <p class="text-lg font-semibold text-gray-900" >[[${p.title}]]</p>
-                                <p class="text-gray-600 mt-1">[[${p.description}]]</p>
+                                <p class="text-lg font-semibold text-gray-900 text-center" >[[${p.title}]]</p>
                                 <p class="text-2xl font-bold text-blue-600 mt-3">
                                     <span>₹[[${p.discountPrice}]]</span> <br>
                                     <span class="text-green-600 text-sm ml-2 text-decoration-line-through text-secondary">
@@ -66,11 +77,19 @@
                                     </span>
                                     <span class="fs-6 text-success"> &nbsp;&nbsp;[[${p.discount}]]% off!</span>
                                 </p>
-                                <a href="/product" class="block mt-4 bg-blue-600 text-white text-center py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                                <a th:href="@{'/product/' +${p.id}}" class="block mt-4 bg-blue-600 text-white text-center py-2 rounded-md hover:bg-blue-700 transition duration-300">
                                     View Details
                                 </a>
                             </div>
                         </div>
+                        </th:block>
+
+                        <th:block th:unless="${products.size >0}">
+
+                            <div class="text-center">
+                            <p class="fs-4 text-center mt-4 text-danger">Product not Available</p>
+                            </div>
+                        </th:block>
 
                     </div>
                 </div>

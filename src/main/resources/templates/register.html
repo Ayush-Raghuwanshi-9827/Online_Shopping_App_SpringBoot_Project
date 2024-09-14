@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Register Page</title>
+
 </head>
 <body>
 <section>
-
-
     <div class="container mt-5 p-5" >
         <div class="row">
             <div class="col-md-5 p-5">
@@ -19,38 +18,46 @@
                 <div class="card shadow p-3 mb-5 bg-body-tertiary rounded">
                     <div class="card-header">
                         <p class="fs-4 text-center">Register</p>
+                        <div th:if="${session.succMsg}" class="mb-4">
+                            <h2 class="text-green-900 font-semibold text-center">[[${session.succMsg}]]</h2>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
+                        <div th:if="${session.errorMsg}" class="mb-4">
+                            <h2 class="text-red-600 font-semibold text-center">[[${session.errorMsg}]]</h2>
+                            <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form action="/SaveUser" method="post" id="userRegister" novalidate>
                             <div class="row">
                                 <div class="col">
                                     <label class="form-label">Full Name:</label>
-                                    <input class="form-control" name="name" type="text">
+                                    <input class="form-control" name="fullName" type="text" required>
                                 </div>
 
 
                                 <div class="col">
                                     <label class="form-label">Mobile Number:</label>
-                                    <input class="form-control" name="mobileNumber" type="number">
+                                    <input class="form-control" name="mobileNumber" type="text" required>
                                 </div>
 
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Email:</label>
-                                <input class="form-control" name="email" type="email">
+                                <input class="form-control" name="email" type="email" required>
                             </div>
 
                             <div class="row">
                                 <div class="col">
                                     <label class="form-label">Address:</label>
-                                    <input class="form-control" name="address" type="text">
+                                    <input class="form-control" name="address" type="text" required>
                                 </div>
 
 
                                 <div class="col">
                                     <label class="form-label">City:</label>
-                                    <input class="form-control" name="city" type="text">
+                                    <input class="form-control" name="city" type="text" required>
                                 </div>
 
                             </div>
@@ -58,48 +65,53 @@
                             <div class="row">
                                 <div class="col">
                                     <label class="form-label">State:</label>
-                                    <input class="form-control" name="state" type="text">
+                                    <input class="form-control" name="state" type="text" required>
                                 </div>
 
 
                                 <div class="col">
                                     <label class="form-label">Pincode:</label>
-                                    <input class="form-control" name="pincode" type="number">
+                                    <input class="form-control" name="pincode" type="text" required>
                                 </div>
 
                             </div>
 
                             <div class="row">
                                 <div class="col">
-                                    <label class="form-label">Password:</label>
-                                    <input class="form-control" name="password" type="text ">
+                                    <label for="password" class="form-label">Password:</label>
+                                    <div class="input-container">
+                                         <input class="form-control" id="password" name="password" type="password">
+                                         <i id="togglePassword" class="fa fa-eye toggle-icon"> </i>
+                                    </div>
+
                                 </div>
 
 
                                 <div class="col">
-                                    <label class="form-label">Confirm Password:</label>
-                                    <input class="form-control" name="confirmPassword" type="password">
+                                    <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                                    <div class="input-container">
+                                        <input id="confirmPassword" class="form-control" name="confirmPassword" type="password">
+                                    </div>
                                 </div>
 
+
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Profile Image:</label>
-                                <input class="form-control" name="profileImage" type="file">
-                            </div>
-                            <button type="submit" class="btn bg-primary text-white col-md-12">Register</button>
+                            <button type="submit" class="btn bg-primary text-white col-md-12 mt-4">Register</button>
                         </form>
                     </div>
                     <div class="card-footer text-center">
 
                         Have an account?
-                        <a href="/login" class="text-blue-500 hover:text-blue-700">Login</a>
+                        <a href="/singin" class="text-blue-500 hover:text-blue-700">Login</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
 
 </body>
 </html>

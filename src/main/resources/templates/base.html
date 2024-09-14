@@ -1,18 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeLeaf.org"
-       th:fragment="Layout(content)">
+<html lang="en" xmlns:th="http://www.thymeLeaf.org" th:fragment="Layout(content)">
 <head>
     <meta charset="UTF-8">
-    <title>base component</title>
+    <title>Base Component</title>
     <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .form-error {
+            color: red;
+            font-size: 0.875em;
+        }
+        .password-toggle {
+            position: relative;
+        }
+        .password-toggle .toggle-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        /* Container for input and icon */
+        .input-container {
+           position: relative; /* Required for positioning child elements */
+           width: 100%; /* Ensure the container spans the full width of its parent */
+        }
+
+        .input-container .form-control {
+            width: 100%; /* Ensure the input spans the full width of its parent container */
+            padding-right: 2.5rem; /* Add space for the icon */
+        }
+
+        .toggle-icon {
+            position: absolute; /* Position the icon absolutely within the container */
+            right: 0.5rem; /* Distance from the right edge of the container */
+            top: 50%; /* Vertically center the icon */
+            transform: translateY(-50%); /* Adjust vertical alignment */
+            cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+             color: #000; /* Change the color of the icon if needed */
+           font-size: 1.25rem; /* Adjust size of the icon */
+           z-index: 1; /* Ensure the icon appears above the input */
+        }
+
+    </style>
 </head>
+
 <body>
 
 <!-- Start navbar -->
-
 <nav class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
         <!-- Left Section: Logo and Links -->
@@ -30,38 +67,57 @@
             <!-- Products Link -->
             <a href="/products" class="hover:text-gray-200">Products</a>
             <!-- Category Dropdown -->
-            <div class="relative group">
-                <a href="#" class="hover:text-gray-200">Category</a>
+            <div class="dropdown">
+                <a class="dropdown-toggle hover:text-gray-200" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Category
+                </a>
                 <!-- Dropdown Menu -->
-                <div class="absolute hidden group-hover:block bg-white text-black rounded shadow-lg mt-2 py-2">
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Electronics</a>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Clothing</a>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Home & Kitchen</a>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Books</a>
-                </div>
+                <ul class="dropdown-menu bg-white text-black rounded shadow-lg mt-2 py-2" aria-labelledby="categoryDropdown">
+                    <li th:each="c : ${categories}">
+                        <a class="dropdown-item hover:bg-gray-100" th:href="@{'products?category=' + ${c.name}}">[[${c.name}]]</a>
+                    </li>
+                </ul>
             </div>
         </div>
 
         <!-- Right Section: Login, Register, and Admin -->
         <div class="flex items-center space-x-6">
-            <!-- Login Link -->
-            <a href="/login" class="flex items-center space-x-2 hover:text-gray-200">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-            </a>
-            <!-- Register Link -->
-            <a href="/register" class="hover:text-gray-200">Register</a>
-            <!-- Admin Link -->
-            <a href="/admin/" class="hover:text-gray-200 font-semibold">Admin</a>
+            <th:block th:if="${user == null}">
+                <!-- Login Link -->
+                <a href="/singin" class="flex items-center space-x-2 hover:text-gray-200">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                </a>
+                <!-- Register Link -->
+                <a href="/register" class="hover:text-gray-200">Register</a>
+                <!-- Admin Link -->
+                <a href="/admin/" class="hover:text-gray-200 font-semibold">Admin</a>
+            </th:block>
+
+            <th:block th:if="${user != null}">
+                <a href="/user/cart" class="nav-link hover:text-gray-200">
+                    <i class="fa-solid fa-cart-shopping"></i> Cart [ [[${countCart}]] ]
+                </a>
+
+                <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i> [[${user.fullName}]]
+                </a>
+
+                <a href="/admin/" class="nav-link hover:text-gray-200">Admin</a>
+
+                <!-- Logout Link -->
+                <a href="/logout" class="nav-link hover:text-gray-200">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </th:block>
         </div>
     </div>
 </nav>
 <!-- End navbar -->
 
-
 <div th:replace="${content}"></div>
 
-<!--Start footer-->
+<!-- Start footer -->
 <footer class="bg-gray-900 text-white py-10" style="margin-top:50px">
     <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Contact Information -->
@@ -89,24 +145,222 @@
         <div>
             <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
             <ul>
-                <li><a href="/home" class="hover:underline">Home</a></li>
+                <li><a href="/" class="hover:underline">Home</a></li>
                 <li><a href="/products" class="hover:underline">Products</a></li>
-                <li><a href="/about" class="hover:underline">About Us</a></li>
-                <li><a href="/contact" class="hover:underline">Contact Us</a></li>
+                <li><a href="#" class="hover:underline">About Us</a></li>
+                <li><a href="#" class="hover:underline">Contact Us</a></li>
             </ul>
         </div>
     </div>
-
-    <!-- Copyright Line -->
-    <div class="text-center mt-8 border-t border-gray-700 pt-4">
-        <p>&copy; 2024 Your E-Commerce Website. All rights reserved.</p>
+    <div class="text-center text-sm mt-6">
+        © 2024 Ecom. All rights reserved.
     </div>
 </footer>
+<!-- End footer -->
 
-<!--End footer-->
+<!-- Scripts -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-vvGSF+eLymnqW8dN1mT1OtthF9JgQ5Bg8SxT1jU+H74qwvIJWgIzphcewD9p5TEf" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-iP4sz0jV0WQEuHVJH6fJ8q7LRGHH8McE3sC5mYLroTs8CUsv4Y00QXcaJJCxIbb" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const toggleIcon = document.getElementById('toggleConfirmPassword');
+    const passwordInput = document.getElementById('confirmPassword');
+
+    toggleIcon.addEventListener('click', function () {
+        // Toggle input type between password and text
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    });
+});
+    $(document).ready(function() {
+        // Toggle Password Visibility
+        $('#togglePassword').click(function() {
+            const passwordField = $('[name="password"]');
+            const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+            passwordField.attr('type', type);
+            $(this).toggleClass('fa-eye fa-eye-slash');
+        });
+
+        $('#toggleConfirmPassword').click(function() {
+            const confirmPasswordField = $('[name="confirmPassword"]');
+            const type = confirmPasswordField.attr('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.attr('type', type);
+            $(this).toggleClass('fa-eye fa-eye-slash');
+        });
+
+        $('#reset').validate({
+             rules:{
+                    password: {
+                    required: true,
+                    minlength: 6
+                },
+
+                confirmPassword: {
+                    required: true,
+                    equalTo: '[name="password"]'
+                }
+             },
+
+             message:{
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Password must be at least 6 characters long"
+                },
+                confirmPassword: {
+                    required: "Please confirm your password",
+                    equalTo: "Passwords do not match"
+                }
+             },
+                errorElement: 'div',
+               errorClass: 'form-error',
+               submitHandler: function(form) {
+                form.submit();
+            }
+
+        })
+        $('#forgot').validate({
+             rules:{
+                 email:{
+                     required: true
+                 }
+             },
+
+             message:{
+                email:{
+                  required:"Please enter your registered email"
+                }
+             },
+                errorElement: 'div',
+               errorClass: 'form-error',
+               submitHandler: function(form) {
+                form.submit();
+            }
+
+        })
+
+         $('#login').validate({
+              rules: {
+                  username: {
+                     required: true
+                  },
+
+                  password: {
+                     required: true
+                  }
+              },
+
+              message: {
+                  username: {
+                    required: "Please enter the registered Email"
+                  },
+                  password: {
+                    required:"Enter your Password"
+                  }
+              },
+               errorElement: 'div',
+               errorClass: 'form-error',
+               submitHandler: function(form) {
+                form.submit();
+            }
+         })
 
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+        // Form Validation for register page
+        $('#userRegister').validate({
+            rules: {
+                fullName: {
+                    required: true,
+                    minlength: 3
+                },
+                mobileNumber: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10,
+                    digits: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                 address: {
+                    required: true
+
+                },
+                city: {
+                    required: true
+
+                },
+                state: {
+                    required: true
+
+                },
+                 pincode: {
+                    required: true
+
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+
+                confirmPassword: {
+                    required: true,
+                    equalTo: '[name="password"]'
+                }
+            },
+            messages: {
+                fullName: {
+                    required: "Please enter your full name",
+                    minlength: "Name must be at least 3 characters long"
+                },
+                mobileNumber: {
+                    required: "Please enter your mobile number",
+                    minlength: "Mobile number must be 10 digits",
+                    maxlength: "Mobile number must be 10 digits",
+                    digits: "Please enter only digits"
+                },
+                address: {
+                    required: "Please Enter your address"
+                },
+                 city: {
+                    required: "Please Enter your city"
+                },
+                 state: {
+                    required: "Please Enter your state"
+                },
+                 pincode: {
+                    required: "Please Enter your pincode"
+                },
+                email: {
+                    required: "Please enter your email address",
+                    email: "Please enter a valid email address"
+                },
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Password must be at least 6 characters long"
+                },
+                confirmPassword: {
+                    required: "Please confirm your password",
+                    equalTo: "Passwords do not match"
+                }
+            },
+            errorElement: 'div',
+            errorClass: 'form-error',
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
 </body>
 </html>

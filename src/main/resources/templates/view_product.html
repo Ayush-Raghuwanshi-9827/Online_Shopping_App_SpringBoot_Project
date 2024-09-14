@@ -11,44 +11,69 @@
             <div class="flex flex-col lg:flex-row items-center gap-10">
                 <!-- Product Image -->
                 <div class="lg:w-1/2 justify-center text-center lg:text-left pl-8">
-                    <img src="img/product/laptop-1.jpeg" alt="Laptop" class="rounded-md object-cover">
+                    <img th:src="@{'/img/product/' + ${details.image}}" alt="Laptop" class="rounded-md object-cover">
                 </div>
 
                 <!-- Product Details -->
+
                 <div class="lg:w-1/2">
-                    <h2 class="text-3xl font-semibold mb-4">Laptop</h2>
-                    <p class="text-lg mb-3"><span class="font-bold">Description:</span> <br> Hp Laptop, 256GB SSD</p>
+                    <div th:if="${session.succMsg}" class="mb-4">
+                        <h2 class="text-green-900 font-semibold">[[${session.succMsg}]]</h2>
+                        <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                    </div>
+                    <div th:if="${session.errorMsg}" class="mb-4">
+                        <h2 class="text-red-600 font-semibold">[[${session.errorMsg}]]</h2>
+                        <div th:text="${@commonServiceImple.removeSessionMessage()}"></div>
+                    </div>
+                    <h2 class="text-3xl font-semibold mb-4">[[${details.title}]]</h2>
+                    <p class="text-lg mb-3"><span class="font-bold">Product Description : </span> <br>[[${details.description}]]</p>
                     <p class="text-lg mb-5"><span class="font-bold">Product Details:</span><br>
                         Status:
-                        <span class="text-green-600 font-semibold">Available</span>
-                        <span class="text-yellow-600 font-semibold">Out of stock</span><br>
-                        Category: Laptop<br>
+                        <th:block th:if="${details.stock>0}">
+                            <span class="text-green-600 font-semibold" >Available</span>
+                        </th:block>
+                        <th:block th:unless="${details.stock>0}">
+                            <span class="text-yellow-600 font-semibold">Out of stock</span><br>
+                        </th:block>
+
+                    <br>
+                        Category: [[${details.category}]]<br>
                         Policy: 7 days Replacement & Return
                     </p>
                     <p class="text-2xl font-bold mb-6">
-                        Price: ₹70,000
-                        <span class="line-through text-gray-500 text-lg">₹50,000</span>
-                        <span class="text-green-600 text-lg">50% off</span>
+                        Price: ₹[[${details.discountPrice}]]
+                        <span class="line-through text-gray-500 text-lg">₹[[${details.price}]]</span>
+                        <span class="text-green-600 text-lg">[[${details.discount}]]% off</span>
                     </p>
 
                     <!-- Features Row -->
-                    <div class="flex justify-between mb-8 text-red-600">
+                    <div class="flex justify-between mb-8 ">
                         <div class="text-center">
-                            <i class="fas fa-money-bill-wave fa-2x"></i>
-                            <p class="mt-2 text-sm font-medium">Cash On Delivery</p>
+                            <i class="fas fa-money-bill-wave fa-2x text-blue-600"></i>
+                            <p class="mt-2 text-sm font-medium text-blue-600">Cash On Delivery</p>
                         </div>
                         <div class="text-center">
-                            <i class="fas fa-undo-alt fa-2x"></i>
-                            <p class="mt-2 text-sm font-medium">Return Available</p>
+                            <i class="fas fa-undo-alt fa-2x text-yellow-600"></i>
+                            <p class="mt-2 text-sm font-medium text-yellow-600">Return Available</p>
                         </div>
                         <div class="text-center">
-                            <i class="fas fa-truck-moving fa-2x"></i>
-                            <p class="mt-2 text-sm font-medium">Free Shipping</p>
+                            <i class="fas fa-truck-moving fa-2x text-red-600"></i>
+                            <p class="mt-2 text-sm font-medium text-red-600">Free Shipping</p>
                         </div>
                     </div>
 
                     <!-- Add to Cart Button -->
-                    <a href="Login.jsp" class="block text-center bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition duration-300">Add to Cart</a>
+                    <th:block th:if="${details.stock>0}">
+                        <th:block th:if="${user == null}">
+                        <a href="/singin" class="block text-center bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-300">Add to Cart</a>
+                        </th:block>
+                        <th:block th:unless="${user == null}">
+                            <a th:href="@{'/user/addCart?pid='+ ${details.id} + '&uid=' +${user.id}}" class="block text-center bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-300">Add to Cart</a>
+                        </th:block>
+                    </th:block>
+                    <th:block th:unless="${details.stock>0}">
+                        <a href="#" class="block text-center bg-yellow-600 text-white font-semibold py-3 rounded-lg hover:bg-yellow-700 transition duration-300">Out of Stock</a>
+                    </th:block>
                 </div>
             </div>
         </div>
