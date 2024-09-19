@@ -1,20 +1,19 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+# Use a base image with Java runtime
+FROM openjdk:17-jdk
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the JAR file into the container
+COPY target/Online_Shopping_App-0.0.1-SNAPSHOT.jar /app/Online_Shopping_App.jar
 
-# Create a directory for the H2 database
-RUN mkdir -p /app/h2db
+# Set environment variables for the database connection
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql.railway.internal:3306/railway
+ENV SPRING_DATASOURCE_USERNAME=root
+ENV SPRING_DATASOURCE_PASSWORD=ChIfVQCfhTJvseMqXJnqcNtNQsDqeTxj
 
-# Add the volume for the H2 database
-VOLUME ["/app/h2db"]
+# Expose the port that the application will run on
+EXPOSE 8080
 
-# Package the application and place it in /app
-RUN ./mvnw clean package -DskipTests
-
-# Run the jar file
-CMD ["java", "-jar", "target/Online_Shopping_App-0.0.1-SNAPSHOT.jar"]
+# Command to run the JAR file
+ENTRYPOINT ["java", "-jar", "/app/Online_Shopping_App.jar"]
