@@ -22,10 +22,10 @@ public class AuthSuccessHandlerImpl  implements AuthenticationSuccessHandler {
         Collection<? extends GrantedAuthority> authorities =  authentication.getAuthorities();
         Set<String> roles = AuthorityUtils.authorityListToSet(authorities);
 
-        if (roles.contains("ROLE_ADMIN")){
-            response.sendRedirect("/admin/");
-        }else {
+        if (roles.contains("ROLE_ADMIN")) {
             response.sendRedirect("/");
+        } else {
+            response.sendRedirect("/admin/");
         }
     }
 }

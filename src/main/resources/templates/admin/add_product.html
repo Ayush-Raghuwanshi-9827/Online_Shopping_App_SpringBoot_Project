@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <form method="post" action="/admin/saveProduct" enctype="multipart/form-data">
+                        <form method="post" action="/admin/saveProduct" enctype="multipart/form-data" onsubmit="return validateFileSize()">
                             <!-- Title Field -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-semibold mb-2">Enter Title</label>
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="w-1/2 pl-2">
                                     <label class="block text-gray-700 font-semibold mb-2">Upload Image</label>
-                                    <input type="file" name="file" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <input type="file" name="file" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="file">
                                 </div>
                             </div>
 
