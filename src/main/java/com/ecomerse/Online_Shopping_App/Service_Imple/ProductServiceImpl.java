@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,33 +55,39 @@ public class ProductServiceImpl implements ProductService {
         Product product1 = getById(product.getId());
         String imageName = image.isEmpty() ? product1.getImage() : image.getOriginalFilename();
 
-            product1.setTitle(product.getTitle());
-            product1.setDescription(product.getDescription());
-            product1.setPrice(product.getPrice());
-            product1.setStock(product.getStock());
-            product1.setCategory(product.getCategory());
-            product1.setImage(imageName);
-            product1.setIsActive(product.getIsActive());
-            product1.setDiscount(product.getDiscount());
+        product1.setTitle(product.getTitle());
+        product1.setDescription(product.getDescription());
+        product1.setPrice(product.getPrice());
+        product1.setStock(product.getStock());
+        product1.setCategory(product.getCategory());
+        product1.setImage(imageName);
+        product1.setIsActive(product.getIsActive());
+        product1.setDiscount(product.getDiscount());
 
-            Double discount = product.getPrice()*(product1.getDiscount()/100.0);
-            Double discountPrice = product.getPrice()-discount;
-
+        Double discount = product.getPrice() * (product1.getDiscount() / 100.0);
+        Double discountPrice = product.getPrice() - discount;
         product1.setDiscountPrice(discountPrice);
 
         Product updateProduct = productRepository.save(product1);
 
-        if (!ObjectUtils.isEmpty(updateProduct)){
-            if (!image.isEmpty()){
-                File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"product"+File.separator+image.getOriginalFilename());
+        if (!ObjectUtils.isEmpty(updateProduct)) {
+            if (!image.isEmpty()) {
+                // Define the path for saving images
+                String uploadDir = "src/main/resources/static/img/product/"; // Path to save files
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs(); // Create the directory if it doesn't exist
+                }
+
+                // Save the file
+                Path path = Paths.get(dir.getAbsolutePath() + File.separator + image.getOriginalFilename());
                 Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             }
-            return product;
+            return product1; // Return the updated product
         }
-
         return null;
     }
+
 
     @Override
     public List<Product> getAllIsActiveProduct(String category) {
@@ -97,6 +104,4 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getSearchProduct(String ch) {
         return productRepository.findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch,ch);
     }
-
-
 }

@@ -9,7 +9,6 @@ import com.ecomerse.Online_Shopping_App.service.ProductService;
 import com.ecomerse.Online_Shopping_App.service.UserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -70,9 +69,13 @@ public class AdminController {
             if (ObjectUtils.isEmpty(saveCategory)){
                 session.setAttribute("errorMsg", "Not saved! Internal Server Error");
             }else {
+                String uploadDir = "src/main/resources/static/img/Category/"; // Path to save files
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs(); // Create the directory if it doesn't exist
+                }
 
-                File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"Category"+File.separator+file.getOriginalFilename());
+                Path path = Paths.get(dir.getAbsoluteFile()+File.separator+file.getOriginalFilename());
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
                 session.setAttribute("succMsg", "Saved Successfully");
             }
@@ -103,40 +106,33 @@ public class AdminController {
         Category category1 = categoryService.getCategoryById(category.getId());
         String imageName = file.isEmpty() ? category1.getImageName() : file.getOriginalFilename();
 
-        if (!ObjectUtils.isEmpty(category1)){
+        if (!ObjectUtils.isEmpty(category1)) {
             category1.setName(category.getName());
             category1.setIsActive(category.getIsActive());
             category1.setImageName(imageName);
         }
-        Category updateCategory = categoryService.saveCategory(category1);
-        if (!ObjectUtils.isEmpty(updateCategory)){
 
-            if (!file.isEmpty()){
-                File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"Category"+File.separator+file.getOriginalFilename());
+        Category updateCategory = categoryService.saveCategory(category1);
+        if (!ObjectUtils.isEmpty(updateCategory)) {
+            if (!file.isEmpty()) {
+                // Define the path for saving images
+                String uploadDir = "src/main/resources/static/img/Category/"; // Path to save files
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs(); // Create the directory if it doesn't exist
+                }
+
+                // Save the file
+                Path path = Paths.get(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             }
-            session.setAttribute("succMsg","Category update Successfully");
-        }else {
-            session.setAttribute("errorMsg","Something Wrong on server!");
+            session.setAttribute("succMsg", "Category updated successfully");
+        } else {
+            session.setAttribute("errorMsg", "Something went wrong on the server!");
         }
-        return "redirect:/admin/loadEditCategory/"+category.getId();
-
+        return "redirect:/admin/loadEditCategory/" + category.getId();
     }
 
-    @ModelAttribute
-    public void getUserDetails(Principal p, Model model){
-        if (p!=null){
-            var email = p.getName();
-            var userDtl = userDetailsService.getUserByEmail(email);
-            model.addAttribute("user", userDtl);
-            Integer cartCount=  cartService.getCountCart(userDtl.getId());
-            model.addAttribute("countCart", cartCount);
-
-        }
-        List<Category> categories = categoryService.getAllCategory();
-        model.addAttribute("categories", categories);
-    }
 
     @PostMapping("/saveProduct")
     public String saveProduct(@ModelAttribute Product product, HttpSession session, @RequestParam("file") MultipartFile image) throws IOException {
@@ -146,8 +142,13 @@ public class AdminController {
         product.setDiscountPrice(product.getPrice());
         Product saveProduct =  productService.saveProduct(product);
         if (!ObjectUtils.isEmpty(saveProduct)){
-            File saveFile = new ClassPathResource("static/img").getFile();
-            Path path = Paths.get(saveFile.getAbsoluteFile()+File.separator+"product"+File.separator+image.getOriginalFilename());
+            String uploadDir = "src/main/resources/static/img/product/";
+            File dir = new File(uploadDir);
+
+            if (!dir.exists()){
+                dir.mkdirs();
+            }
+            Path path = Paths.get(dir.getAbsoluteFile()+File.separator+image.getOriginalFilename());
             Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             session.setAttribute("succMsg", "Product Saved Successfully");
         }else {
@@ -186,6 +187,7 @@ public class AdminController {
 
         if ((product.getDiscount() < 0) || (product.getDiscount() > 100)) {
             session.setAttribute("errorMsg", "Invalid Discount");
+            return "redirect:/admin/editProduct/" + product.getId();
         } else {
             Product updateProduct = productService.updateProduct(product, image);
 
@@ -217,4 +219,19 @@ public class AdminController {
         return "redirect:/admin/addAdmin";
     }
 
+    @ModelAttribute
+    public void getUserDetails(Principal p, Model model){
+        if (p!=null){
+            var email = p.getName();
+            var userDtl = userDetailsService.getUserByEmail(email);
+            model.addAttribute("user", userDtl);
+            Integer cartCount=  cartService.getCountCart(userDtl.getId());
+            model.addAttribute("countCart", cartCount);
+        }else {
+            model.addAttribute("user", null);
+        }
+
+        List<Category> categories = categoryService.getAllCategory();
+        model.addAttribute("categories", categories);
+    }
 }
