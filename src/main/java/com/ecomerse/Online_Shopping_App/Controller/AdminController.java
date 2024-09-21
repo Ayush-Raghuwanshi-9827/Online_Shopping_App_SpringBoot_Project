@@ -9,6 +9,7 @@ import com.ecomerse.Online_Shopping_App.service.ProductService;
 import com.ecomerse.Online_Shopping_App.service.UserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -69,15 +70,10 @@ public class AdminController {
             if (ObjectUtils.isEmpty(saveCategory)){
                 session.setAttribute("errorMsg", "Not saved! Internal Server Error");
             }else {
-                String uploadDir = "src/main/resources/static/img/Category/"; // Path to save files
-                File dir = new File(uploadDir);
-                if (!dir.exists()) {
-                    dir.mkdirs(); // Create the directory if it doesn't exist
-                }
-
-                Path path = Paths.get(dir.getAbsoluteFile()+File.separator+file.getOriginalFilename());
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                session.setAttribute("succMsg", "Saved Successfully");
+               File saveFile = new ClassPathResource("static/img").getFile();
+               Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"Category",File.separator+file.getOriginalFilename());
+               Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+               session.setAttribute("succMsg", "Saved Category Successfully");
             }
         }
         return "redirect:/admin/category";
@@ -111,19 +107,11 @@ public class AdminController {
             category1.setIsActive(category.getIsActive());
             category1.setImageName(imageName);
         }
-
         Category updateCategory = categoryService.saveCategory(category1);
         if (!ObjectUtils.isEmpty(updateCategory)) {
             if (!file.isEmpty()) {
-                // Define the path for saving images
-                String uploadDir = "src/main/resources/static/img/Category/"; // Path to save files
-                File dir = new File(uploadDir);
-                if (!dir.exists()) {
-                    dir.mkdirs(); // Create the directory if it doesn't exist
-                }
-
-                // Save the file
-                Path path = Paths.get(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
+                File saveFile = new ClassPathResource("static/img").getFile();
+                Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"Category",File.separator+file.getOriginalFilename());
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             }
             session.setAttribute("succMsg", "Category updated successfully");
@@ -142,14 +130,10 @@ public class AdminController {
         product.setDiscountPrice(product.getPrice());
         Product saveProduct =  productService.saveProduct(product);
         if (!ObjectUtils.isEmpty(saveProduct)){
-            String uploadDir = "src/main/resources/static/img/product/";
-            File dir = new File(uploadDir);
-
-            if (!dir.exists()){
-                dir.mkdirs();
-            }
-            Path path = Paths.get(dir.getAbsoluteFile()+File.separator+image.getOriginalFilename());
+            File saveFile = new ClassPathResource("static/img").getFile();
+            Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"product",File.separator+image.getOriginalFilename());
             Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
             session.setAttribute("succMsg", "Product Saved Successfully");
         }else {
             session.setAttribute("erroeMsg", "Something Wrong On server!");
@@ -191,9 +175,9 @@ public class AdminController {
         } else {
             Product updateProduct = productService.updateProduct(product, image);
 
-            if (!ObjectUtils.isEmpty(updateProduct))
-
-                session.setAttribute("succMsg", "Product updated Successfully");
+            if (!ObjectUtils.isEmpty(updateProduct)){
+               session.setAttribute("succMsg", "Product updated Successfully");
+            }
             else
                 session.setAttribute("errorMsg", "Something Wrong on server!");
         }
@@ -230,7 +214,6 @@ public class AdminController {
         }else {
             model.addAttribute("user", null);
         }
-
         List<Category> categories = categoryService.getAllCategory();
         model.addAttribute("categories", categories);
     }

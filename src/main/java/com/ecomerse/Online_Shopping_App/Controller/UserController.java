@@ -47,7 +47,6 @@ public class UserController {
         model.addAttribute("categories", categories);
     }
 
-
     @GetMapping("/addCart")
     public String addCart(@RequestParam Integer pid, @RequestParam Integer uid, HttpSession session){
         Cart saveCart = cartService.saveCart(pid, uid);
@@ -69,7 +68,7 @@ public class UserController {
             Double totalOrderPrice = carts.get(carts.size() -1).getTotalOrderAmount();
             model.addAttribute("totalPrice", totalOrderPrice);
         }
-        return "/User/Cart";
+        return "User/Cart";
     }
 
     private UserDetails getLoggedInUserDetails(Principal p) {

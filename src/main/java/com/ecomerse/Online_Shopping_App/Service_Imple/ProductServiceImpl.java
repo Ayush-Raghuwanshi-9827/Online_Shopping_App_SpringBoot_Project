@@ -54,7 +54,6 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Product product, MultipartFile image) throws IOException {
         Product product1 = getById(product.getId());
         String imageName = image.isEmpty() ? product1.getImage() : image.getOriginalFilename();
-
         product1.setTitle(product.getTitle());
         product1.setDescription(product.getDescription());
         product1.setPrice(product.getPrice());
@@ -72,15 +71,8 @@ public class ProductServiceImpl implements ProductService {
 
         if (!ObjectUtils.isEmpty(updateProduct)) {
             if (!image.isEmpty()) {
-                // Define the path for saving images
-                String uploadDir = "src/main/resources/static/img/product/"; // Path to save files
-                File dir = new File(uploadDir);
-                if (!dir.exists()) {
-                    dir.mkdirs(); // Create the directory if it doesn't exist
-                }
-
-                // Save the file
-                Path path = Paths.get(dir.getAbsolutePath() + File.separator + image.getOriginalFilename());
+                File saveFile = new ClassPathResource("static/img").getFile();
+                Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"product",File.separator+image.getOriginalFilename());
                 Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             }
             return product1; // Return the updated product
